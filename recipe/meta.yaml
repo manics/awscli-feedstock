@@ -1,56 +1,100 @@
 {% set name = "awscli" %}
-{% set version = "1.19.54" %}
-{% set hash = "76a71721aa1726a57bb2e4b3760921041a4c56bb3e8448f4a61fdb61e38e497e" %}
+{% set version = "2.1.38" %}
 
-{% set vmajor,vminor,vpatch = version.split('.') %}
-# ALWAYS DOUBLE-CHECK THESE OFFSETS AGAINST UPSTREAM setup.py
-{% set botocore_major = vmajor | int + 0 %}
-{% set botocore_minor = vminor | int + 1 %}
-{% set botocore_patch = vpatch | int + 0 %}
-{% set botocore_pin = botocore_major ~ '.' ~ botocore_minor ~ '.' ~ botocore_patch %}
+{% set botocore_pin = "2.0.0dev106" %}
 
 package:
   name: {{ name|lower }}
   version: {{ version }}
 
 source:
-  fn: {{ name }}-{{ version }}.tar.gz
-  url: https://pypi.org/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
-  sha256: {{ hash }}
+  git_url: https://github.com/aws/aws-cli.git
+  git_rev: {{ version }}
 
 build:
   number: 0
+  noarch: python
+  # https://github.com/amancevice/homebrew-core/blob/78db076bcc232c93d3df78209e72e1d6b9a358b1/Formula/awscli.rb#L47
   script: {{ PYTHON }} -m pip install . --no-deps -vv
+  # {{ PYTHON }} scripts/gen-ac-index --include-builtin-index
+  # --index-location /tmp/ignore
 
 requirements:
   host:
-    - python
+    - python >=3.6
     - pip
+    # # The build process generates the autocomplete index (scripts/gen-ac-index)
+    # # which requires importing awscli modules, so we need to install all runtime
+    # # dependencies too. YAML anchors don't support merging lists so we have to
+    # # duplicate everything :-(
+    # # Commented lines are the original requirements from
+    # # https://github.com/aws/aws-cli/blob/2.1.38/setup.py#L27-L37
+    # - botocore =={{ botocore_pin }}
+    # # - colorama >=0.2.5,<0.4.4
+    # - colorama >=0.2.5,<0.5.0
+    # # - docutils >=0.10,<0.16
+    # - docutils >=0.10,<0.18
+    # # - cryptography >=3.3.2,<3.4.0
+    # - cryptography >=3.3.2,<3.5.0
+    # - s3transfer >=0.3.0,<0.4.0
+    # # - ruamel.yaml >=0.15.0,<0.16.0
+    # - ruamel.yaml >=0.15.0,<0.17.0
+    # - wcwidth <0.2.0
+    # - prompt_toolkit >=2.0.0,<3.0.0
+    # - distro >=1.5.0,<1.6.0
 
   run:
-    - python
+    # Commented lines are the original requirements from
+    # https://github.com/aws/aws-cli/blob/2.1.38/setup.py#L27-L37
     - botocore =={{ botocore_pin }}
-    - colorama >=0.2.5,<0.4.4
-    - docutils >=0.10,<0.16
-    - rsa >=3.1.2,<=4.5.0  # [py2k]
-    - rsa >=3.1.2,<4.8  # [py3k]
-    - s3transfer >=0.4.0,<0.5.0
-    - pyyaml >=3.10,<5.5
+    # - colorama >=0.2.5,<0.4.4
+    - colorama >=0.2.5,<0.5.0
+    # - docutils >=0.10,<0.16
+    - docutils >=0.10,<0.18
+    # - cryptography >=3.3.2,<3.4.0
+    - cryptography >=3.3.2,<3.5.0
+    - s3transfer >=0.3.0,<0.4.0
+    # - ruamel.yaml >=0.15.0,<0.16.0
+    - ruamel.yaml >=0.15.0,<0.17.0
+    - wcwidth <0.2.0
+    - prompt_toolkit >=2.0.0,<3.0.0
+    - distro >=1.5.0,<1.6.0
 
 test:
+  # commands:
+  #   - aws_completer
+  # /home/test/v/lib/python3.9/site-packages/awscli/data/ac.index
   imports:
     - awscli
+    - awscli.autocomplete
+    - awscli.autoprompt
+    - awscli.bcdoc
     - awscli.customizations
+    - awscli.customizations.cloudformation
     - awscli.customizations.cloudtrail
+    - awscli.customizations.codeartifact
     - awscli.customizations.codedeploy
     - awscli.customizations.configservice
     - awscli.customizations.configure
     - awscli.customizations.datapipeline
+    - awscli.customizations.dlm
+    - awscli.customizations.dynamodb
     - awscli.customizations.ec2
+    - awscli.customizations.ecs
+    - awscli.customizations.eks
     - awscli.customizations.emr
+    - awscli.customizations.emrcontainers
     - awscli.customizations.gamelift
+    - awscli.customizations.history
+    - awscli.customizations.lightsail
+    - awscli.customizations.logs
     - awscli.customizations.s3
     - awscli.customizations.s3.syncstrategy
+    - awscli.customizations.servicecatalog
+    - awscli.customizations.sso
+    - awscli.customizations.wizard
+    - awscli.customizations.wizard.ui
+    - awscli.customizations.wizard.wizards
 
 about:
   home: https://aws.amazon.com/cli/
@@ -63,6 +107,4 @@ about:
 
 extra:
   recipe-maintainers:
-    - pmlandwehr
-    - hajapy
-    - tkelman
+    - manics
