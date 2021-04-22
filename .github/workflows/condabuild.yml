@@ -41,6 +41,8 @@ jobs:
 
       - name: Build
         run: conda build -c ${ANACONDA_USER} -c conda-forge recipe
+        # Ensure $variables are expanded on Windows
+        shell: bash
         env:
           ANACONDA_USER: ${{ secrets.ANACONDA_USER }}
       - run: ls -R "${{ steps.condablddir.outputs.condabld }}"
