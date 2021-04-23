@@ -40,7 +40,7 @@ jobs:
         run: conda install -y -q conda-build conda-verify
 
       - name: Build
-        run: conda build -c ${ANACONDA_USER} -c conda-forge recipe
+        run: conda build -c ${ANACONDA_USER:-manics} recipe
         # Ensure $variables are expanded on Windows
         shell: bash
         env:
