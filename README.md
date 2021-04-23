@@ -27,3 +27,8 @@ AWS-CLI v2 requires botocore 2 which is available in the same channel as this pa
 ```
 conda install -c manics awscli
 ```
+
+To enable bash completion in your current shell run
+```
+complete -C aws_completer aws
+```
