@@ -6,6 +6,7 @@ Conda awscli v2
 
 This is a fork of https://github.com/conda-forge/awscli-feedstock with AWS-CLI v2 (requires botocore 2).
 
+Note that some dependency ranges have been loosened from the original source to make this easier to install.
 
 Home: https://aws.amazon.com/cli/
 
@@ -32,3 +33,5 @@ To enable bash completion in your current shell run
 ```
 complete -C aws_completer aws
 ```
+
+For other shells including PowerShell see https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-completion.html#cli-command-completion-windows
