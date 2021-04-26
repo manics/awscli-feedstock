@@ -8,8 +8,7 @@ package:
   version: {{ version }}
 
 source:
-  git_url: https://github.com/aws/aws-cli.git
-  git_rev: {{ version }}
+  url: https://github.com/aws/aws-cli/archive/refs/tags/{{ version }}.tar.gz
 
 build:
   number: 0
