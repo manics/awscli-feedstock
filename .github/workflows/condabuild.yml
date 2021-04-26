@@ -34,6 +34,11 @@ jobs:
           mkdir ${{ steps.condablddir.outputs.condabld }}
           conda config --set conda_build.output_folder ${{ steps.condablddir.outputs.condabld }}
 
+      - name: add msys64 to path
+        # needed for patch utility
+        run: echo "C:\msys64\mingw64\bin" >> $GITHUB_PATH
+        if: matrix.os == 'windows-latest'
+
       - name: Checkout
         uses: actions/checkout@v2
       - name: Install conda build
