@@ -1,15 +1,15 @@
 {% set name = "awscli" %}
-{% set version = "2.1.38" %}
-
-{% set botocore_pin = "2.0.0dev106" %}
+{% set version = "2.proposal.6352" %}
+{% set git_rev = "391e55079f2259bfb8bb06525720e3661ca066ea" %}
 
 package:
   name: {{ name|lower }}
   version: {{ version }}
 
 source:
-  git_url: https://github.com/aws/aws-cli.git
-  git_rev: {{ version }}
+  git_url: https://github.com/kyleknap/aws-cli.git
+  # https://github.com/kyleknap/aws-cli/tree/poc-sdist
+  git_rev: {{ git_rev }}
 
 build:
   number: 0
@@ -17,7 +17,6 @@ build:
   # https://github.com/amancevice/homebrew-core/blob/78db076bcc232c93d3df78209e72e1d6b9a358b1/Formula/awscli.rb#L47
   script: |
     {{ PYTHON }} -m pip install . --no-deps -vv
-    {{ PYTHON }} scripts/gen-ac-index --include-builtin-index --index-location /tmp/ignore.ac
 
 requirements:
   host:
@@ -28,37 +27,47 @@ requirements:
     # dependencies too. YAML anchors don't support merging lists so we have to
     # duplicate everything :-(
     # Commented lines are the original requirements from
-    # https://github.com/aws/aws-cli/blob/2.1.38/setup.py#L27-L37
-    - botocore =={{ botocore_pin }}
+    # https://github.com/kyleknap/aws-cli/blob/391e55079f2259bfb8bb06525720e3661ca066ea/setup.cfg#L29-L39
     # - colorama >=0.2.5,<0.4.4
     - colorama >=0.2.5,<0.5.0
     # - docutils >=0.10,<0.16
     - docutils >=0.10,<0.18
     # - cryptography >=3.3.2,<3.4.0
     - cryptography >=3.3.2,<3.5.0
-    - s3transfer >=0.3.0,<0.4.0
     # - ruamel.yaml >=0.15.0,<0.16.0
     - ruamel.yaml >=0.15.0,<0.17.0
     - wcwidth <0.2.0
     - prompt_toolkit >=2.0.0,<3.0.0
     - distro >=1.5.0,<1.6.0
+    # - awscrt==0.11.13
+    - awscrt >=0.11.13,<0.12.0
+    - python-dateutil>=2.1,<3.0.0
+    - jmespath>=0.7.1,<1.0.0
+    - urllib3>=1.25.4,<1.27
+
+  build:
+    - setuptools >=40.6.0
+    - wheel
 
   run:
     # Commented lines are the original requirements from
-    # https://github.com/aws/aws-cli/blob/2.1.38/setup.py#L27-L37
-    - botocore =={{ botocore_pin }}
+    # https://github.com/kyleknap/aws-cli/blob/391e55079f2259bfb8bb06525720e3661ca066ea/setup.cfg#L29-L39
     # - colorama >=0.2.5,<0.4.4
     - colorama >=0.2.5,<0.5.0
     # - docutils >=0.10,<0.16
     - docutils >=0.10,<0.18
     # - cryptography >=3.3.2,<3.4.0
     - cryptography >=3.3.2,<3.5.0
-    - s3transfer >=0.3.0,<0.4.0
     # - ruamel.yaml >=0.15.0,<0.16.0
     - ruamel.yaml >=0.15.0,<0.17.0
     - wcwidth <0.2.0
     - prompt_toolkit >=2.0.0,<3.0.0
     - distro >=1.5.0,<1.6.0
+    # - awscrt==0.11.13
+    - awscrt >=0.11.13,<0.12.0
+    - python-dateutil>=2.1,<3.0.0
+    - jmespath>=0.7.1,<1.0.0
+    - urllib3>=1.25.4,<1.27
 
 test:
   commands:
