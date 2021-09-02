@@ -55,7 +55,7 @@ jobs:
 
   upload:
     needs: build
-    if: startsWith(github.ref, 'refs/tags')
+    if: startsWith(github.ref, 'refs/tags') || github.ref == 'refs/heads/dev'
     runs-on: ubuntu-latest
     steps:
 
@@ -71,7 +71,11 @@ jobs:
       - name: Upload to Anaconda Cloud
         run: |
           anaconda whoami
-          anaconda upload --user ${ANACONDA_USER} artifact/awscli*
+          LABEL_ARG=
+          if [ "${{ github.ref == 'refs/heads/dev' }}" = "true" ]; then
+            LABEL_ARG="--label dev"
+          fi
+          anaconda upload --user ${ANACONDA_USER} artifact/awscli* ${LABEL_ARG}
         env:
           ANACONDA_USER: ${{ secrets.ANACONDA_USER }}
           ANACONDA_API_TOKEN: ${{ secrets.ANACONDA_API_TOKEN }}
