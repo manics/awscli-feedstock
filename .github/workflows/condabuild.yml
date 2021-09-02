@@ -40,11 +40,9 @@ jobs:
         run: conda install -y -q conda-build conda-verify
 
       - name: Build
-        run: conda build -c ${ANACONDA_USER:-manics} recipe
+        run: conda build -c conda-forge recipe
         # Ensure $variables are expanded on Windows
         shell: bash
-        env:
-          ANACONDA_USER: ${{ secrets.ANACONDA_USER }}
       - run: ls -R "${{ steps.condablddir.outputs.condabld }}"
 
       - uses: actions/upload-artifact@v2
