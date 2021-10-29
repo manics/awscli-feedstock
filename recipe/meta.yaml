@@ -1,6 +1,7 @@
 {% set name = "awscli" %}
 {% set version = "2.proposal.6352" %}
-{% set git_rev = "391e55079f2259bfb8bb06525720e3661ca066ea" %}
+# https://github.com/aws/aws-cli/pull/6352#issuecomment-952211577
+{% set git_rev = "eabaefe4c789d228c154d20181135f92fd94d9e4" %}
 
 package:
   name: {{ name|lower }}
@@ -12,7 +13,7 @@ source:
   git_rev: {{ git_rev }}
 
 build:
-  number: 0
+  number: 1
   noarch: python
   # https://github.com/amancevice/homebrew-core/blob/78db076bcc232c93d3df78209e72e1d6b9a358b1/Formula/awscli.rb#L47
   script: |
@@ -27,7 +28,7 @@ requirements:
     # dependencies too. YAML anchors don't support merging lists so we have to
     # duplicate everything :-(
     # Commented lines are the original requirements from
-    # https://github.com/kyleknap/aws-cli/blob/391e55079f2259bfb8bb06525720e3661ca066ea/setup.cfg#L29-L39
+    # https://github.com/kyleknap/aws-cli/blob/eabaefe4c789d228c154d20181135f92fd94d9e4/setup.cfg#L29-L39
     # - colorama >=0.2.5,<0.4.4
     - colorama >=0.2.5,<0.5.0
     # - docutils >=0.10,<0.16
@@ -39,8 +40,7 @@ requirements:
     - wcwidth <0.2.0
     - prompt_toolkit >=2.0.0,<3.0.0
     - distro >=1.5.0,<1.6.0
-    # - awscrt==0.11.13
-    - awscrt >=0.11.13,<0.12.0
+    - awscrt ==0.12.4
     - python-dateutil>=2.1,<3.0.0
     - jmespath>=0.7.1,<1.0.0
     - urllib3>=1.25.4,<1.27
@@ -51,7 +51,7 @@ requirements:
 
   run:
     # Commented lines are the original requirements from
-    # https://github.com/kyleknap/aws-cli/blob/391e55079f2259bfb8bb06525720e3661ca066ea/setup.cfg#L29-L39
+    # https://github.com/kyleknap/aws-cli/blob/eabaefe4c789d228c154d20181135f92fd94d9e4/setup.cfg#L29-L39
     # - colorama >=0.2.5,<0.4.4
     - colorama >=0.2.5,<0.5.0
     # - docutils >=0.10,<0.16
@@ -63,14 +63,14 @@ requirements:
     - wcwidth <0.2.0
     - prompt_toolkit >=2.0.0,<3.0.0
     - distro >=1.5.0,<1.6.0
-    # - awscrt==0.11.13
-    - awscrt >=0.11.13,<0.12.0
+    - awscrt ==0.12.4
     - python-dateutil>=2.1,<3.0.0
     - jmespath>=0.7.1,<1.0.0
     - urllib3>=1.25.4,<1.27
 
 test:
   commands:
+    - aws --version
     - aws_completer
   # TODO: Check autocomplete index exists:
   #   lib/python3.x/site-packages/awscli/data/ac.index
