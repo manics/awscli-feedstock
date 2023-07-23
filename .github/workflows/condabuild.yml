@@ -4,6 +4,9 @@ on:
   pull_request:
   push:
 
+env:
+  noarch_target: ubuntu-latest
+
 jobs:
   build:
     runs-on: ${{ matrix.os }}
@@ -16,7 +19,7 @@ jobs:
       fail-fast: false
     steps:
       - name: setup-conda
-        uses: s-weigand/setup-conda@v1.1.1
+        uses: s-weigand/setup-conda@v1.2.1
 
       - name: Set conda-bld output folder to make it easier to find artifacts
         id: condablddir
@@ -52,6 +55,7 @@ jobs:
       - run: ls -R "${{ steps.condablddir.outputs.condabld }}"
 
       - uses: actions/upload-artifact@v3
+        if: matrix.os == env.noarch_target
         with:
           path: "${{ steps.condablddir.outputs.condabld }}/*/awscli-*"
           if-no-files-found: error
@@ -63,7 +67,7 @@ jobs:
     steps:
 
       - name: setup-conda
-        uses: s-weigand/setup-conda@v1.1.1
+        uses: s-weigand/setup-conda@v1.2.1
       - run: conda install -y -q anaconda-client
 
       - name: Download artifacts from build
