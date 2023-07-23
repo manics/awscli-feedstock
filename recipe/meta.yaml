@@ -12,11 +12,18 @@ source:
   sha256: {{ hash }}
 
 build:
-  number: 0
+  number: 1
   # Build uses pep517 with a custom backend
-  # console_scripts entrypoints aren't used, so this can't be noarch
-  script: {{ PYTHON }} -m pip install . --no-deps --ignore-installed -vv  # [not unix]
-  script: {{ PYTHON }} -m pip install . --no-deps --ignore-installed -vv && mkdir -p $PREFIX/share/bash-completions/completions && echo complete -C aws_completer aws >$PREFIX/share/bash-completions/completions/aws  # [unix]
+  # console_scripts entrypoints aren't used, so this can't be officially noarch
+  # However since this is just for testing make it no-arch to avoid having to rebuild
+  # for all platforms
+  noarch: python
+  entry_points:
+    - aws = awscli.clidriver:main
+    - aws_completer = awscli.autocomplete.aws_completer_script:main
+  # script: {{ PYTHON }} -m pip install . --no-deps --ignore-installed -vv  # [not unix]
+  # script: {{ PYTHON }} -m pip install . --no-deps --ignore-installed -vv && mkdir -p $PREFIX/share/bash-completions/completions && echo complete -C aws_completer aws >$PREFIX/share/bash-completions/completions/aws  # [unix]
+  # Uses build.sh
 
 requirements:
   build:
